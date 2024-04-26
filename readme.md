@@ -37,7 +37,7 @@ background = "/home/.../stock.png"
 background_own_thread = false
 
 [debug]
-show_pose = true
+show_pose = false
 
 ```
 ## Installation
