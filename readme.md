@@ -7,6 +7,9 @@ Well, fear no more because Open Screen is the solution.
 With the power of modern technology Open Screen replaces your boring background with whatever you need!
 
 ---
+## Description
+Open Screen creates a virtual camera that monitors for activity. Once an application connects to the virtual camera, Open Screen then connects to your actual camera and initiates the background replacement.
+
 ## Usage
 Open screen relies on [v4l2loopback-dkms](https://github.com/umlaeute/v4l2loopback) to create the virtual camera 
 ```
