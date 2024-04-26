@@ -1,4 +1,4 @@
-# Open Screen
+![Open Screen](https://github.com/Slenderman00/open_screen/blob/master/banner.png?raw=true)
 
 Are you tired of cleaning your room?  
 Do you want to flex on your colleagues that you're on holiday in the Maldives?  
