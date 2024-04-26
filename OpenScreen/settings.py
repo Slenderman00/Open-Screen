@@ -9,8 +9,8 @@ settings = {
         "flip_image": False,
         "real_camera": 0,
         "fake_camera": 2,
-        "depth_scale": 0.4,
-        "threshold_offset": 6,
+        "depth_scale": 0.3,
+        "threshold_offset": 4,
     }
 }
 
