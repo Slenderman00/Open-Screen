@@ -30,6 +30,10 @@ class CameraProcess:
         self.status_checker = None
         self.generator = generateDepthMap()
         self.running = True
+        background_path = str(self.settings["general"]["background"])
+        self.background = cv2.imread(background_path)
+        if self.background is None:
+            raise FileNotFoundError(f"Unable to load background image from path: {background_path}")
 
     def check_cam(self):
         while self.running:
@@ -53,6 +57,8 @@ class CameraProcess:
         self.vid = None
 
     def run(self):
+        self.background = cv2.resize(self.background, (int(self.width), int(self.height)))
+
         with pyvirtualcam.Camera(width=int(self.width), height=int(self.height), fps=20, device=f'/dev/video{self.fake_camera}') as camera:
             self.start_checker()
             while self.running:
@@ -67,6 +73,10 @@ class CameraProcess:
 
                     binary_mask = self.generator.get_mask()
                     masked_frame = cv2.bitwise_and(frame, frame, mask=binary_mask)
+
+                    # Replace black pixels with background pixels
+                    black_pixels = np.all(masked_frame == [0, 0, 0], axis=2)
+                    masked_frame[black_pixels] = self.background[black_pixels]
 
                     # pose_res = generator.get_pose_res()
 

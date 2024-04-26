@@ -13,6 +13,9 @@ setup(
         'transformers==4.37.1',
         'toml'
     ],
+    package_data={
+        'OpenScreen': ['static/*']
+    },
     entry_points='''
         [console_scripts]
         OpenScreen=OpenScreen.main:main
