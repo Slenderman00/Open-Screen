@@ -35,7 +35,7 @@ class generateDepthMap():
         return self.pose_res
 
     def get_ready(self):
-        return self.mask is not None and self.pose_res is not None and self.running
+        return True
 
     def process(self):
         if self.frame is not None:

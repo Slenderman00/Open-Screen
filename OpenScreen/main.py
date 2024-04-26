@@ -80,9 +80,10 @@ class CameraProcess:
                     masked_frame[black_pixels] = self.background[black_pixels]
 
                     if self.settings["debug"]["show_pose"]:
-                        pose_res = self.generator.get_pose_res()
-                        mp_drawing = mp.solutions.drawing_utils
-                        mp_drawing.draw_landmarks(masked_frame, pose_res.pose_landmarks, mp.solutions.pose.POSE_CONNECTIONS)
+                        if self.generator.get_ready():
+                            pose_res = self.generator.get_pose_res()
+                            mp_drawing = mp.solutions.drawing_utils
+                            mp_drawing.draw_landmarks(masked_frame, pose_res.pose_landmarks, mp.solutions.pose.POSE_CONNECTIONS)
 
                     frame = cv2.cvtColor(masked_frame, cv2.COLOR_BGR2RGB)
 
