@@ -10,7 +10,8 @@ setup(
         'numpy==1.26.4',
         'Pillow==10.3.0',
         'pyvirtualcam==0.11.1',
-        'transformers==4.37.1'
+        'transformers==4.37.1',
+        'toml'
     ],
     entry_points='''
         [console_scripts]
