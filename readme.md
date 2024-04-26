@@ -4,7 +4,7 @@ Are you tired of cleaning your room?
 Do you want to flex on your colleagues that you're on holiday in the Maldives?  
 Well, fear no more because Open Screen is the solution.
 
-With the power of modern technologi Open Screen replaces your boring background with whatever you need!
+With the power of modern technology Open Screen replaces your boring background with whatever you need!
 
 credits:
 - https://www.flaticon.com/free-icon/green-screen_2059843
