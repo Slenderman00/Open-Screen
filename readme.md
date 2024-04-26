@@ -1,10 +1,35 @@
-![Open Screen](https://github.com/Slenderman00/open_screen/blob/master/banner.png?raw=true)
+![Open Screen](https://github.com/Slenderman00/open_screen/blob/master/media/banner.png?raw=true)
 
 Are you tired of cleaning your room?  
 Do you want to flex on your colleagues that you're on holiday in the Maldives?  
 Well, fear no more because Open Screen is the solution.
-
+---
 With the power of modern technology Open Screen replaces your boring background with whatever you need!
+
+---
+## Usage
+Open screen relies on [v4l2loopback-dkms](https://github.com/umlaeute/v4l2loopback) to create the virtual camera 
+```
+sudo modprobe v4l2loopback devices=1
+```
+
+To start open screen run the followin command. 
+
+```
+openscreen
+```
+Settings can be edited by running 
+```
+openscreen --settings
+```
+
+## Installation
+```
+pip install git+https://github.com/Slenderman00/open_screen.git#egg=openscreen 
+```
+
+## Demo
+![Demo](https://github.com/Slenderman00/open_screen/blob/master/media/openScreen.png?raw=true)
 
 credits:
 - https://www.flaticon.com/free-icon/green-screen_2059843
