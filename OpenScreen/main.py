@@ -9,12 +9,9 @@ import time
 import argparse
 import mediapipe as mp
 
+
 class CameraProcess:
     def __init__(self):
-        # Create settings if they havent been created
-        if not settings_exist():
-            create_settings()
-
         self.settings = load_settings()
 
         if self.settings["general"]["background_own_thread"]:
@@ -94,6 +91,8 @@ class CameraProcess:
 
 
 def main():
+    if not settings_exist():
+        create_settings()
 
     parser = argparse.ArgumentParser(description="OpenScreen")
 
