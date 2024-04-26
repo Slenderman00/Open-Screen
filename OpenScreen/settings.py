@@ -13,6 +13,9 @@ settings = {
         "threshold_offset": 4,
         "background": str(own_dir / 'static/stock.png'),
         "background_own_thread": False,
+    },
+    "debug": {
+        "show_pose": False,
     }
 }
 

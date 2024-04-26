@@ -1,16 +1,13 @@
-import os
 import cv2
 import pyvirtualcam
 import numpy as np
 
 from OpenScreen.utils import is_cam_used
-from OpenScreen.settings import create_settings, load_settings, settings_exist
+from OpenScreen.settings import create_settings, load_settings, settings_exist, edit_settings
 import threading
 import time
-
-# Set environment variable
-os.environ['QT_QPA_PLATFORM'] = 'xcb'
-
+import argparse
+import mediapipe as mp
 
 class CameraProcess:
     def __init__(self):
@@ -85,7 +82,10 @@ class CameraProcess:
                     black_pixels = np.all(masked_frame == [0, 0, 0], axis=2)
                     masked_frame[black_pixels] = self.background[black_pixels]
 
-                    # pose_res = generator.get_pose_res()
+                    if self.settings["debug"]["show_pose"]:
+                        pose_res = self.generator.get_pose_res()
+                        mp_drawing = mp.solutions.drawing_utils
+                        mp_drawing.draw_landmarks(masked_frame, pose_res.pose_landmarks, mp.solutions.pose.POSE_CONNECTIONS)
 
                     frame = cv2.cvtColor(masked_frame, cv2.COLOR_BGR2RGB)
 
@@ -94,6 +94,22 @@ class CameraProcess:
 
 
 def main():
+
+    parser = argparse.ArgumentParser(description="OpenScreen")
+
+    parser.add_argument(
+        "--settings",
+        "-s",
+        action="store_true",
+        help="Edit the settings",
+    )
+
+    args = parser.parse_args()
+
+    if args.settings:
+        edit_settings()
+        return
+
     camera_process = CameraProcess()
     camera_process.run()
 
