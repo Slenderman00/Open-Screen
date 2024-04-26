@@ -1,0 +1,7 @@
+[Unit]
+Description=Open Screen
+After=multi-user.target[Service]
+Type=simple
+Restart=always
+ExecStart=
+WantedBy=multi-user.target

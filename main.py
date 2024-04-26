@@ -3,53 +3,74 @@ import os
 import cv2
 import mediapipe as mp
 import pyvirtualcam
-
+import numpy as np
 
 from depthMap import generateDepthMap
+from utils import is_cam_used
+import threading
+import time 
 
 # Set environment variable
 os.environ['QT_QPA_PLATFORM'] = 'xcb'
 
-# pose
-mp_pose = mp.solutions.pose
-pose = mp_pose.Pose(static_image_mode=False)
 
-# Load depth estimation model
-checkpoint = "vinvino02/glpn-nyu"
-depth_estimator = pipeline("depth-estimation", model=checkpoint)
+class CameraProcess:
+    def __init__(self):
+        self.vid = None
+        self.mount_camera(0)
+        self.width = self.vid.get(cv2.CAP_PROP_FRAME_WIDTH)
+        self.height = self.vid.get(cv2.CAP_PROP_FRAME_HEIGHT)
+        self.release_camera()
+        self.cam_num = 2
+        self.status_checker = None
+        self.generator = generateDepthMap()
+        self.running = True
 
-vid = cv2.VideoCapture(0)
+    def check_cam(self):
+        while self.running:
+            if is_cam_used(self.cam_num):
+                if self.vid is None:
+                    print("mounting")
+                    self.mount_camera(0)
+            else:
+                if self.vid is not None:
+                    print("unmounting")
+                    self.release_camera()
+            time.sleep(1)
 
-width = vid.get(cv2.CAP_PROP_FRAME_WIDTH)
-height = vid.get(cv2.CAP_PROP_FRAME_HEIGHT)
+    def start_checker(self):
+        self.status_checker = threading.Thread(target=self.check_cam)
+        self.status_checker.start()
 
-generator = generateDepthMap()
+    def mount_camera(self, camera):
+        self.vid = cv2.VideoCapture(camera)
 
-with pyvirtualcam.Camera(width=int(width), height=int(height), fps=20) as cam:
-    while True:
-        # Capture the video frame
-        ret, frame = vid.read()
-        frame = cv2.flipND(frame, 1)
+    def release_camera(self):
+        self.vid.release()
+        self.vid = None
 
-        generator.set_frame(frame)
+    def run(self):
+        with pyvirtualcam.Camera(width=int(self.width), height=int(self.height), fps=20, device='/dev/video2') as camera:
+            self.start_checker()
+            while self.running:
+                frame = np.zeros((int(self.height), int(self.width), 3), np.uint8)
+                if self.vid is not None:
+                    ret, frame = self.vid.read()
+                    frame = cv2.flipND(frame, 1)
 
-        binary_mask = generator.get_mask()
-        masked_frame = cv2.bitwise_and(frame, frame, mask=binary_mask)
+                    self.generator.set_frame(frame)
 
-        pose_res = generator.get_pose_res()
+                    binary_mask = self.generator.get_mask()
+                    masked_frame = cv2.bitwise_and(frame, frame, mask=binary_mask)
 
-        mp_drawing = mp.solutions.drawing_utils
-        mp_drawing.draw_landmarks(masked_frame, pose_res.pose_landmarks, mp_pose.POSE_CONNECTIONS)
-        # cv2.imshow('masked frame', masked_frame)
+                    # pose_res = generator.get_pose_res()
 
-        masked_frame_rgb = cv2.cvtColor(masked_frame, cv2.COLOR_BGR2RGB)
-        cam.send(masked_frame_rgb)
-        cam.sleep_until_next_frame()
+                    frame = cv2.cvtColor(masked_frame, cv2.COLOR_BGR2RGB)
 
-        # Exit loop when 'q' is pressed
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+                camera.send(frame)
+                camera.sleep_until_next_frame()
 
-    # Release video capture object and close all windows
-    vid.release()
-    cv2.destroyAllWindows()
+
+if __name__ == "__main__":
+    camera_process = CameraProcess()
+    camera_process.run()

@@ -65,6 +65,6 @@ class generateDepthMap():
                 depth_value = depth_map.getpixel((x, y))
                 depth_values.append(depth_value)
 
-        threshold_depth = np.average(depth_values) + 7
+        threshold_depth = np.average(depth_values) + 4
 
         return threshold_depth
