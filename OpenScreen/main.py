@@ -3,7 +3,6 @@ import cv2
 import pyvirtualcam
 import numpy as np
 
-from OpenScreen.depthMap import generateDepthMap
 from OpenScreen.utils import is_cam_used
 from OpenScreen.settings import create_settings, load_settings, settings_exist
 import threading
@@ -20,6 +19,12 @@ class CameraProcess:
             create_settings()
 
         self.settings = load_settings()
+
+        if self.settings["general"]["background_own_thread"]:
+            from OpenScreen.depthMap_threading import generateDepthMap
+        else:
+            from OpenScreen.depthMap import generateDepthMap
+
         self.vid = None
         self.real_camera = int(self.settings["general"]["real_camera"])
         self.mount_camera(self.real_camera)
@@ -57,6 +62,8 @@ class CameraProcess:
         self.vid = None
 
     def run(self):
+        if self.settings["general"]["background_own_thread"]:
+            self.generator.start()
         self.background = cv2.resize(self.background, (int(self.width), int(self.height)))
 
         with pyvirtualcam.Camera(width=int(self.width), height=int(self.height), fps=20, device=f'/dev/video{self.fake_camera}') as camera:

@@ -55,6 +55,9 @@ class generateDepthMap():
             self.mask = binary_mask_resized
 
     def get_threshold_depth(self, depth_map, pose_res):
+        if pose_res.pose_landmarks is None:
+            return np.int16(0)
+
         depth_map_width = depth_map.size[0]
         depth_map_height = depth_map.size[1]
 
