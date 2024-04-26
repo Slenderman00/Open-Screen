@@ -3,5 +3,5 @@ Description=Open Screen
 After=multi-user.target[Service]
 Type=simple
 Restart=always
-ExecStart=
+ExecStart=OpenScreen
 WantedBy=multi-user.target

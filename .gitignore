@@ -1,1 +1,5 @@
-__pycache__/depthMap.cpython-311.pyc
+__pycache__/
+OpenScreen.egg-info/
+Open_Screen.egg-info/
+build/
+dist/

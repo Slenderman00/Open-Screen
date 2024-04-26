@@ -5,8 +5,8 @@ import mediapipe as mp
 import pyvirtualcam
 import numpy as np
 
-from depthMap import generateDepthMap
-from utils import is_cam_used
+from OpenScreen.depthMap import generateDepthMap
+from OpenScreen.utils import is_cam_used
 import threading
 import time 
 
@@ -71,6 +71,10 @@ class CameraProcess:
                 camera.sleep_until_next_frame()
 
 
-if __name__ == "__main__":
+def main():
     camera_process = CameraProcess()
     camera_process.run()
+
+
+if __name__ == "__main__":
+    main()
