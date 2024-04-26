@@ -22,7 +22,21 @@ Settings can be edited by running
 ```
 openscreen --settings
 ```
+The following settings are available
+```
+[general]
+flip_image = false
+real_camera = 0
+fake_camera = 2
+depth_scale = 0.3
+threshold_offset = 4
+background = "/home/.../stock.png"
+background_own_thread = false
 
+[debug]
+show_pose = true
+
+```
 ## Installation
 ```
 pip install git+https://github.com/Slenderman00/open_screen.git#egg=openscreen 
