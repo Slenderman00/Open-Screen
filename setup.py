@@ -18,6 +18,6 @@ setup(
     },
     entry_points='''
         [console_scripts]
-        OpenScreen=OpenScreen.main:main
+        openscreen=OpenScreen.main:main
     ''',
 )
