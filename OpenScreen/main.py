@@ -30,11 +30,9 @@ class CameraProcess:
         while self.running:
             if is_cam_used(self.cam_num):
                 if self.vid is None:
-                    print("mounting")
                     self.mount_camera(0)
             else:
                 if self.vid is not None:
-                    print("unmounting")
                     self.release_camera()
             time.sleep(1)
 
