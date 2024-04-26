@@ -1,7 +1,5 @@
-from transformers import pipeline
 import os
 import cv2
-import mediapipe as mp
 import pyvirtualcam
 import numpy as np
 
