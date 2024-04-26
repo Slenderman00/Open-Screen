@@ -4,14 +4,17 @@ import cv2
 import numpy as np
 import mediapipe as mp
 import math
+from OpenScreen.settings import load_settings
 
 
 class generateDepthMap():
     def __init__(self):
+        self.settings = load_settings()
         self.frame = None
         self.mask = None
         self.running = False
-        self.scale = 0.3
+        self.scale = self.settings["general"]["depth_scale"]
+        self.threshold_offset = self.settings["general"]["threshold_offset"]
         self.pose_res = None
 
         self.mp_pose = mp.solutions.pose
@@ -65,6 +68,6 @@ class generateDepthMap():
                 depth_value = depth_map.getpixel((x, y))
                 depth_values.append(depth_value)
 
-        threshold_depth = np.average(depth_values) + 5
+        threshold_depth = np.average(depth_values) + self.threshold_offset
 
         return threshold_depth

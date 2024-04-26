@@ -5,8 +5,9 @@ import numpy as np
 
 from OpenScreen.depthMap import generateDepthMap
 from OpenScreen.utils import is_cam_used
+from OpenScreen.settings import create_settings, load_settings, settings_exist
 import threading
-import time 
+import time
 
 # Set environment variable
 os.environ['QT_QPA_PLATFORM'] = 'xcb'
@@ -14,21 +15,27 @@ os.environ['QT_QPA_PLATFORM'] = 'xcb'
 
 class CameraProcess:
     def __init__(self):
+        # Create settings if they havent been created
+        if not settings_exist():
+            create_settings()
+
+        self.settings = load_settings()
         self.vid = None
-        self.mount_camera(0)
+        self.real_camera = int(self.settings["general"]["real_camera"])
+        self.mount_camera(self.real_camera)
         self.width = self.vid.get(cv2.CAP_PROP_FRAME_WIDTH)
         self.height = self.vid.get(cv2.CAP_PROP_FRAME_HEIGHT)
         self.release_camera()
-        self.cam_num = 2
+        self.fake_camera = int(self.settings["general"]["fake_camera"])
         self.status_checker = None
         self.generator = generateDepthMap()
         self.running = True
 
     def check_cam(self):
         while self.running:
-            if is_cam_used(self.cam_num):
+            if is_cam_used(self.fake_camera):
                 if self.vid is None:
-                    self.mount_camera(0)
+                    self.mount_camera(self.real_camera)
             else:
                 if self.vid is not None:
                     self.release_camera()
@@ -46,13 +53,15 @@ class CameraProcess:
         self.vid = None
 
     def run(self):
-        with pyvirtualcam.Camera(width=int(self.width), height=int(self.height), fps=20, device='/dev/video2') as camera:
+        with pyvirtualcam.Camera(width=int(self.width), height=int(self.height), fps=20, device=f'/dev/video{self.fake_camera}') as camera:
             self.start_checker()
             while self.running:
                 frame = np.zeros((int(self.height), int(self.width), 3), np.uint8)
                 if self.vid is not None:
                     ret, frame = self.vid.read()
-                    frame = cv2.flipND(frame, 1)
+
+                    if self.settings["general"]["flip_image"]:
+                        frame = cv2.flipND(frame, 1)
 
                     self.generator.set_frame(frame)
 
