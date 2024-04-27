@@ -2,7 +2,7 @@ import cv2
 import pyvirtualcam
 import numpy as np
 
-from OpenScreen.utils import is_cam_used
+from OpenScreen.utils import is_cam_used, cam_exists
 from OpenScreen.settings import create_settings, load_settings, settings_exist, edit_settings
 import threading
 import time
@@ -56,6 +56,15 @@ class CameraProcess:
         self.vid = None
 
     def run(self):
+        # Check if virtual  and physical cam exists
+        if not cam_exists(self.settings["general"]["fake_camera"]):
+            print(f"Could not find virtual camera: /dev/video{self.settings['general']['fake_camera']}")
+            quit()
+
+        if not cam_exists(self.settings["general"]["real_camera"]):
+            print(f"Could not find camera: /dev/video{self.settings['general']['real_camera']}")
+            quit()
+
         if self.settings["general"]["background_own_thread"]:
             self.generator.start()
         self.background = cv2.resize(self.background, (int(self.width), int(self.height)))

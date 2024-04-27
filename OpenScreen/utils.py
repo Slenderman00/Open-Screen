@@ -1,4 +1,5 @@
 import subprocess
+import os
 
 
 def is_cam_used(cam):
@@ -8,3 +9,7 @@ def is_cam_used(cam):
         processes = len(stdout.decode().split())
         return processes > 1
     return False
+
+
+def cam_exists(cam):
+    return os.path.isfile(f'/dev/video{cam}')
