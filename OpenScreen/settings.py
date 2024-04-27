@@ -27,6 +27,10 @@ def create_settings():
 
 
 def select_editor():
+    # Use editor env var if it is set
+    if 'EDITOR' in os.environ:
+        return os.environ['EDITOR']
+
     editors = ["vim", "nano", "emacs", "code"]
     for i, editor in enumerate(editors):
         print(f"{i}: {editor}")
