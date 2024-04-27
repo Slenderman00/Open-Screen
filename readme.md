@@ -11,7 +11,8 @@ With the power of modern technology Open Screen replaces your boring background 
 Open Screen creates a virtual camera that monitors for activity. Once an application connects to the virtual camera, Open Screen then connects to your actual camera and initiates the background replacement.
 
 ## Usage
-Open screen relies on [v4l2loopback-dkms](https://github.com/umlaeute/v4l2loopback) to create the virtual camera 
+Open screen relies on [v4l2loopback-dkms](https://github.com/umlaeute/v4l2loopback) to create the virtual camera.
+The following command creates a virtual camera.
 ```
 sudo modprobe v4l2loopback devices=1
 ```
