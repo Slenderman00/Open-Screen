@@ -12,4 +12,6 @@ def is_cam_used(cam):
 
 
 def cam_exists(cam):
-    return os.path.isfile(f'/dev/video{cam}')
+    #return os.path.isfile(f'/dev/video{cam}')
+    return True
+    
