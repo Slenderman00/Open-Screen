@@ -6,13 +6,12 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'mediapipe',
-        'numpy==1.26.4',
+        'numpy==2.0.0',
         'Pillow==10.3.0',
         'pyvirtualcam==0.11.1',
-        'transformers==4.37.1',
-        'toml',
-	'opencv-python'
+        'toml==0.10.2',
+        'torch==2.3.1',
+        'torchvision==0.18.1'
     ],
     package_data={
         'OpenScreen': ['static/*']
