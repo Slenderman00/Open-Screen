@@ -11,7 +11,8 @@ setup(
         'pyvirtualcam==0.11.1',
         'toml==0.10.2',
         'torch==2.3.1',
-        'torchvision==0.18.1'
+        'torchvision==0.18.1',
+        'opencv-python'
     ],
     package_data={
         'OpenScreen': ['static/*']
