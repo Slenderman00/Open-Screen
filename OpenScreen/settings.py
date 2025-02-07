@@ -10,9 +10,15 @@ settings = {
         "real_camera": 0,
         "fake_camera": 2,
         "background": str(own_dir / 'static/stock.png'),
-        "model": str(own_dir / 'static/model.pth'),
     },
-    "debug": {}
+    "model": {
+        "model": str(own_dir / 'static/model.pth'),
+        "image_resolution": 256,
+        "depth": 5,
+        "init_features": 32,
+    },
+    "debug": {
+    }
 }
 
 

@@ -3,7 +3,7 @@ from torchvision import transforms
 from PIL import Image
 import cv2
 from OpenScreen.settings import load_settings
-from OpenScreen.simpleUnet import SimpleUnet
+from OpenScreen.simpleUnetAgnostic import SimpleUnetAgnostic
 
 
 class GenerateBackgroundReplacement():
@@ -14,14 +14,14 @@ class GenerateBackgroundReplacement():
         self.running = False
 
         self.image_transform = transforms.Compose([
-            transforms.Resize((512, 512)),
+            transforms.Resize((self.settings["model"]["image_resolution"], self.settings["model"]["image_resolution"])),
             transforms.ToTensor(),
             transforms.Normalize([0.4117, 0.5926, 0.3815], [0.3299, 0.3250, 0.3212])
         ])
 
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        self.model = SimpleUnet()
-        state_dictionary = torch.load(self.settings["general"]["model"], map_location=self.device)
+        self.model = SimpleUnetAgnostic(self.settings["model"]["depth"], self.settings["model"]["init_features"])
+        state_dictionary = torch.load(self.settings["model"]["model"], map_location=self.device)
         self.model.load_state_dict(state_dictionary)
         self.model.to(self.device)
         self.model.eval()  # Set the model to inference mode

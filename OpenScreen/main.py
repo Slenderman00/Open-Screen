@@ -9,6 +9,8 @@ import time
 import argparse
 from OpenScreen.backgroundReplacement import GenerateBackgroundReplacement
 
+import openscreen_cpp
+
 
 class CameraProcess:
     def __init__(self):
@@ -106,8 +108,10 @@ def main():
         edit_settings()
         return
 
-    camera_process = CameraProcess()
-    camera_process.run()
+    # camera_process = CameraProcess()
+    # camera_process.run()
+
+    openscreen_cpp.start("path/to/model.pt", 224, "path/to/background.jpg")
 
 
 if __name__ == "__main__":
