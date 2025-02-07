@@ -3,3 +3,4 @@ OpenScreen.egg-info/
 Open_Screen.egg-info/
 build/
 dist/
+.venv/
