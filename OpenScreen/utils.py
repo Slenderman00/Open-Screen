@@ -1,5 +1,6 @@
 import subprocess
 import os
+from OpenScreen.settings import create_settings, load_settings, settings_exist, edit_settings
 
 
 def is_cam_used(cam):
@@ -12,6 +13,5 @@ def is_cam_used(cam):
 
 
 def cam_exists(cam):
-    #return os.path.isfile(f'/dev/video{cam}')
-    return True
-    
+    return os.path.lexists(f'/dev/video{cam}')
+    # return True

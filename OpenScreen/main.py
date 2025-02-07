@@ -7,17 +7,14 @@ from OpenScreen.settings import create_settings, load_settings, settings_exist, 
 import threading
 import time
 import argparse
-import mediapipe as mp
+from OpenScreen.backgroundReplacement import GenerateBackgroundReplacement
+
+import openscreen_cpp
 
 
 class CameraProcess:
     def __init__(self):
         self.settings = load_settings()
-
-        if self.settings["general"]["background_own_thread"]:
-            from OpenScreen.depthMap_threading import generateDepthMap
-        else:
-            from OpenScreen.depthMap import generateDepthMap
 
         self.vid = None
         self.real_camera = int(self.settings["general"]["real_camera"])
@@ -27,7 +24,7 @@ class CameraProcess:
         self.release_camera()
         self.fake_camera = int(self.settings["general"]["fake_camera"])
         self.status_checker = None
-        self.generator = generateDepthMap()
+        self.generator = GenerateBackgroundReplacement()
         self.running = True
         background_path = str(self.settings["general"]["background"])
         self.background = cv2.imread(background_path)
@@ -65,8 +62,6 @@ class CameraProcess:
             print(f"Could not find camera: /dev/video{self.settings['general']['real_camera']}")
             quit()
 
-        if self.settings["general"]["background_own_thread"]:
-            self.generator.start()
         self.background = cv2.resize(self.background, (int(self.width), int(self.height)))
 
         with pyvirtualcam.Camera(width=int(self.width), height=int(self.height), fps=20, device=f'/dev/video{self.fake_camera}') as camera:
@@ -87,12 +82,6 @@ class CameraProcess:
                     # Replace black pixels with background pixels
                     black_pixels = np.all(masked_frame == [0, 0, 0], axis=2)
                     masked_frame[black_pixels] = self.background[black_pixels]
-
-                    if self.settings["debug"]["show_pose"]:
-                        if self.generator.get_ready():
-                            pose_res = self.generator.get_pose_res()
-                            mp_drawing = mp.solutions.drawing_utils
-                            mp_drawing.draw_landmarks(masked_frame, pose_res.pose_landmarks, mp.solutions.pose.POSE_CONNECTIONS)
 
                     frame = cv2.cvtColor(masked_frame, cv2.COLOR_BGR2RGB)
 
@@ -119,8 +108,10 @@ def main():
         edit_settings()
         return
 
-    camera_process = CameraProcess()
-    camera_process.run()
+    # camera_process = CameraProcess()
+    # camera_process.run()
+
+    openscreen_cpp.start("path/to/model.pt", 224, "path/to/background.jpg")
 
 
 if __name__ == "__main__":
