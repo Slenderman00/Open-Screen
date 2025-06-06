@@ -9,7 +9,9 @@ settings = {
         "flip_image": False,
         "real_camera": 0,
         "fake_camera": 2,
-        "background": str(own_dir / 'static/stock.png'),
+        "background": str(own_dir / 'static/alley.png'),
+        "flip_background": False,
+        "blur_mask": False,
     },
     "model": {
         "model": str(own_dir / 'static/model.pth'),

@@ -24,10 +24,15 @@ class CameraProcess:
         self.status_checker = None
         self.generator = GenerateBackgroundReplacement()
         self.running = True
+
         background_path = str(self.settings["general"]["background"])
         self.background = cv2.imread(background_path)
+
         if self.background is None:
             raise FileNotFoundError(f"Unable to load background image from path: {background_path}")
+
+        if self.settings["general"]["flip_background"]:
+            self.background = cv2.flip(self.background, 1)
 
     def check_cam(self):
         while self.running:
@@ -60,7 +65,7 @@ class CameraProcess:
             print(f"Could not find camera: /dev/video{self.settings['general']['real_camera']}")
             quit()
 
-        self.background = cv2.resize(self.background, (int(self.width), int(self.height)))
+        self.background = cv2.resize(self.background, (int(self.width), int(self.height)), interpolation=cv2.INTER_LINEAR)
 
         with pyvirtualcam.Camera(width=int(self.width), height=int(self.height), fps=20, device=f'/dev/video{self.fake_camera}') as camera:
             self.start_checker()
@@ -108,7 +113,6 @@ def main():
 
     camera_process = CameraProcess()
     camera_process.run()
-
 
 
 if __name__ == "__main__":

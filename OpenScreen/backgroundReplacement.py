@@ -43,6 +43,18 @@ class GenerateBackgroundReplacement():
                 binary_mask = self.model(image_tensor) > 0.5
 
             binary_mask_np = binary_mask.squeeze().cpu().numpy().astype('uint8')
-            binary_mask_resized = cv2.resize(binary_mask_np, (self.frame.shape[1], self.frame.shape[0]))
+            binary_mask_resized = cv2.resize(binary_mask_np, (self.frame.shape[1], self.frame.shape[0]), interpolation=cv2.INTER_LINEAR)
 
-            self.mask = binary_mask_resized
+            binary_mask = (binary_mask_resized > 0.5).astype('uint8')
+
+            if self.settings["general"]["blur_mask"]:
+                blur_kernel_size = 15
+                binary_mask = cv2.GaussianBlur(binary_mask.astype('float32'), (blur_kernel_size, blur_kernel_size), 0)
+
+                erosion_size = blur_kernel_size
+                kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (erosion_size, erosion_size))
+                binary_mask = cv2.erode(binary_mask, kernel, iterations=1)
+
+                binary_mask = (binary_mask * 255).astype('uint8')
+
+            self.mask = binary_mask
