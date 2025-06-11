@@ -22,7 +22,7 @@ class GenerateBackgroundReplacement():
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.model = SimpleUnetAgnostic(self.settings["model"]["depth"], self.settings["model"]["init_features"])
         state_dictionary = torch.load(self.settings["model"]["model"], map_location=self.device)
-        self.model.load_state_dict(state_dictionary)
+        self.model.load_state_dict(state_dictionary['model_state_dict'])
         self.model.to(self.device)
         self.model.eval()  # Set the model to inference mode
 
